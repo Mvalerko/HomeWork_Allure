@@ -46,6 +46,7 @@ class DeliveryTest {
         $("[data-test-id='date'] input").setValue(secondMeetingDate);
         $$("button").find(exactText("Запланировать")).click();
         $$("button").find(exactText("Перепланировать")).click();
+        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
         $(".notification__content").shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDate), Duration.ofSeconds(15)).shouldBe(Condition.visible);
     }
     @Test
