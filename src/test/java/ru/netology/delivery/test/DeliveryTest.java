@@ -2,9 +2,9 @@ package ru.netology.delivery.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
 
@@ -21,6 +21,15 @@ class DeliveryTest {
     void setup() {
         open("http://localhost:9999");
     }
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
 
     @Test
     @DisplayName("Should successful plan and replan meeting")
@@ -64,7 +73,7 @@ class DeliveryTest {
         $("[data-test-id='date'] input").setValue(firstMeetingDate);
         $("[name='name']").setValue(validUser.getName());
         $("[name='phone']").setValue(validUser.getPhone());
-        $$("span").find(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).click();
+        //$$("span").find(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных")).click();
         $$("button").find(exactText("Запланировать")).click();
         $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
         $(".notification__content").shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(15)).shouldBe(Condition.visible);
